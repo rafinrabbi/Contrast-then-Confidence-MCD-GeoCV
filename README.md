@@ -24,40 +24,42 @@ This repository contains the code and models for our comprehensive study on out-
 ```
 .
 ├── README.md                              # This file
-├── SETUP.md                               # Detailed setup instructions
-├── requirements.txt                       # Python dependencies
-├── LICENSE                                # License information
-├── paper/                                 # Paper and documentation
-│   ├── MCD_OOD.pdf                       # Final paper PDF
-│   ├── COMPREHENSIVE_PUBLICATION_REPORT.md
-│   └── WACV_RESULTS_SECTION.tex
+├── requirements.txt                       # Python dependencies (pip)
+├── environment.yml                        # Conda environment file
+├── LICENSE                                # MIT License
+├── .gitignore                             # Git ignore patterns
 │
-├── Scratch_training_(No_pretraining)/    # Training from scratch experiments
+├── Scratch_training_(No_pretraining)/    # Training from scratch (⭐ BEST RESULTS)
 │   ├── README.md                         # Folder-specific documentation
-│   ├── D0.1_BS1024-scratch_training_custom_CNN.ipynb
-│   ├── D0.1_BS1024-scratch_training_resnet50.ipynb
-│   ├── D0.1_BS1024-scratch_training_ViTs.ipynb
+│   ├── 01_train_custom_cnn_from_scratch.ipynb      # Custom CNN (98.13% acc)
+│   ├── 02_train_resnet50_from_scratch.ipynb        # ResNet-50
+│   ├── 03_train_vit_from_scratch.ipynb             # ViT (fails without pretraining)
+│   ├── best_supervised_model_no_pretrain.pth
 │   ├── models/                           # Trained model checkpoints
 │   └── umap_visualizations/              # UMAP embedding visualizations
 │
 ├── Pretraining+Finetuning/               # SimCLR pretraining + fine-tuning
-│   ├── README.md                         # Folder-specific documentation
-│   ├── Final_Only_Pretrain100_D0.1_BS64_newaugm_300epoch.ipynb
-│   ├── Final_Only_Pretrain100_D0.1_BS64_newaugm_50epoch.ipynb
-│   ├── Final_Only_Pretrain100_D0.1_BS64_newaugm_restnet_enc.ipynb
-│   ├── Final_Only_Pretrain100_D0.1_BS64_newaugm_Vit_SIMCLR.ipynb
-│   ├── D0.1_BS1024 finetune-progessive-unf-v.20 gpsug.ipynb
-│   ├── D0.1_BS1024 finetune-progessive-unf-v.20 gpsug_restnet_enc.ipynb
-│   ├── D0.1_BS1024 finetune-progessive-unf-v.20 gpsug_vit_enc.ipynb
+│   ├── # Phase 1: SimCLR Pretraining
+│   ├── 01_simclr_pretrain_custom_cnn_300epochs.ipynb
+│   ├── 02_simclr_pretrain_custom_cnn_50epochs.ipynb
+│   ├── 03_simclr_pretrain_resnet50.ipynb
+│   ├── 04_simclr_pretrain_vit.ipynb
+│   │
+│   ├── # Phase 2: Fine-tuning
+│   ├── 05_finetune_custom_cnn_after_simclr.ipynb
+│   ├── 06_finetune_resnet50_after_simclr.ipynb
+│   ├── 07_finetune_vit_after_simclr.ipynb
+│   │
+│   ├── best_supervised_model.pth
 │   ├── models/                           # Pretrained and fine-tuned checkpoints
 │   └── umap_visualizations/
 │
-└── Pretrained_loaded_weight/             # Using pre-existing pretrained weights
-    ├── README.md                         # Folder-specific documentation
-    ├── finetune-progessive-unf-v.20 gpsug_densenet201.ipynb
-    ├── finetune-progessive-unf-v.20 gpsug_Efficientnet-b4.ipynb
-    ├── finetune-progessive-unf-v.20 gpsug_restnet_enc.ipynb
-    ├── finetune-progessive-unf-v.20 gpsug_ViT-B16.ipynb
+└── Pretrained loaded weight/             # ImageNet pretrained weights
+    ├── 01_finetune_densenet201_imagenet.ipynb
+    ├── 02_finetune_efficientnet_b4_imagenet.ipynb
+    ├── 03_finetune_resnet50_imagenet.ipynb
+    ├── 04_finetune_vit_b16_imagenet.ipynb
+    ├── best_supervised_model.pth
     ├── models/                           # Fine-tuned model checkpoints
     └── umap_visualizations/
 ```
@@ -159,61 +161,6 @@ jupyter notebook "Pretrained loaded weight/03_finetune_resnet50_imagenet.ipynb"
 jupyter notebook "Pretrained loaded weight/04_finetune_vit_b16_imagenet.ipynb"
 ```
 
-## 📊 Results Summary
-
-| Configuration | Architecture | Val Accuracy | OOD AUROC (MI) | OOD AUROC (MSP) | Parameters |
-|--------------|--------------|--------------|----------------|-----------------|------------|
-| **Scratch (Best)** | Custom CNN | **98.13%** | **0.9255** | 0.0994 | 1.14M |
-| Scratch | ResNet-50 | 97.78% | 0.8954 | 0.0812 | 23.5M |
-| Scratch | ViT-B/16 | 50.31% | 0.5231 | 0.5145 | 85.8M |
-| Pretrained | Custom CNN | 93.74% | 0.8291 | 0.0745 | 1.14M |
-| Pretrained | ResNet-50 | 93.22% | 0.8367 | 0.0689 | 23.5M |
-| Pretrained | ViT-B/16 | 90.98% | 0.8725 | 0.0823 | 85.8M |
-
-**Key Observations:**
-- Mutual Information (MI) consistently outperforms Maximum Softmax Probability (MSP)
-- Custom CNN trained from scratch achieves best overall performance
-- Vision Transformers require pretraining to achieve competitive results
-- Contrastive pretraining degrades CNN performance due to domain mismatch
-
-## 🔬 Methodology
-
-### Monte Carlo Dropout for Uncertainty Quantification
-
-We use MC Dropout to estimate epistemic uncertainty by performing T=30 stochastic forward passes at test time:
-
-- **Mutual Information (MI)**: `H[y|x] - E[H[y|x,θ]]`
-- **Predictive Entropy**: `-Σ p(y|x) log p(y|x)`
-- **Predictive Variance**: `Var[p(y|x)]`
-- **Maximum Softmax Probability**: `max(p(y|x))`
-
-### SimCLR Contrastive Pretraining
-
-- Dataset: BigEarthNet-S2 (269,695 samples)
-- Epochs: 50, 300
-- Batch Size: 64
-- Temperature: 0.5
-- Augmentations: Random crops, color jitter, Gaussian blur
-
-### Progressive Unfreezing Fine-tuning
-
-1. Train classifier head (10 epochs)
-2. Unfreeze last encoder layer (10 epochs)
-3. Unfreeze all encoder layers (80 epochs)
-4. Total: 100 fine-tuning epochs
-
-## 📖 Citation
-
-If you find this work useful, please cite our paper:
-
-```bibtex
-@inproceedings{anonymous2026contrastive,
-  title={Contrastive Self-Supervised Learning for Out-of-Distribution Detection in Satellite Imagery: When Simpler is Better},
-  author={Anonymous Authors},
-  booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) Workshops},
-  year={2026}
-}
-```
 
 ## 📝 License
 
@@ -237,4 +184,3 @@ For questions or collaboration opportunities, please open an issue or contact th
 
 ---
 
-**Note**: Model checkpoints are stored in the respective `models/` folders within each experiment directory. Download links for pretrained models will be provided upon paper acceptance.
