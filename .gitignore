@@ -1,0 +1,106 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.conda/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+*.ipynb_checkpoints
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Model Checkpoints (Large files - optional to ignore)
+*.pth
+*.pt
+*.h5
+*.hdf5
+*.ckpt
+*.pkl
+*.pickle
+
+# Data (to avoid uploading large datasets)
+data/
+datasets/
+EuroSAT/
+UCMerced_LandUse/
+BigEarthNet/
+bigearthnet-s2/
+*.zip
+*.tar
+*.tar.gz
+
+# Logs and Outputs
+logs/
+*.log
+tensorboard/
+wandb/
+mlruns/
+
+# OS
+.DS_Store
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Images and Visualizations (optional - keep if you want to track them)
+# *.png
+# *.jpg
+# *.jpeg
+
+# UMAP visualizations (can be large)
+umap_visualizations/*.png
+umap_visualizations/*.html
+
+# Training history
+training_history*.pkl
+
+# Environment files
+.env
+.env.local
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentation builds
+docs/_build/
