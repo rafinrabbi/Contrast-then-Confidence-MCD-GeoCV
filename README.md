@@ -6,18 +6,13 @@
 
 **Official implementation of "Contrastive Self-Supervised Learning for Out-of-Distribution Detection in Satellite Imagery: When Simpler is Better"**
 
-Accepted at WACV 2026 GeoCV Workshop
+Accepted at WACV 2026 GeoCV Workshop  
+📄 *Paper will be available in the WACV 2026 proceedings*
 
-## 🎯 Overview
+## 📄 Abstract
 
-This repository contains the code and models for our comprehensive study on out-of-distribution (OOD) detection in satellite imagery. We compare contrastive self-supervised pretraining (SimCLR on BigEarthNet-S2) versus training from scratch across three encoder architectures for satellite image classification and OOD detection using Monte Carlo Dropout.
+Reliable deployment of Earth Observation (EO) image classifiers requires not only high in-distribution accuracy but also the ability to detect inputs that deviate from the training distribution. While recent work has explored self-supervised representation learning and Bayesian uncertainty estimation independently, their interaction in EO settings remains poorly understood. In this work, we propose **Contrast then Confidence (C2)**, a three-stage framework that combines contrastive pretraining with uncertainty-aware out-of-distribution (OOD) detection via Monte Carlo (MC) Dropout. The framework first learns task-agnostic representations from large-scale unlabeled EO imagery using SimCLR-style contrastive learning, then transfers these representations to a supervised land-use classification task with progressive fine-tuning, and finally estimates epistemic uncertainty at inference time using MC Dropout. We conduct a comprehensive evaluation across convolutional and transformer-based architectures using EuroSAT as the in-distribution dataset and UC Merced as the OOD benchmark. Our results reveal strong architectural dependencies: lightweight convolutional networks trained from scratch achieve superior uncertainty calibration, reaching up to 0.93 AUROC for OOD detection, while Vision Transformers fail to generalize without large-scale pretraining but improve substantially under contrastive pretraining, achieving 0.87 AUROC. Across all architectures and training regimes, mutual information derived from MC Dropout consistently outperforms predictive entropy, variance, and maximum softmax probability, highlighting the limitations of deterministic confidence for EO OOD detection. These findings demonstrate that reliable EO systems require jointly considering architecture choice, pretraining strategy, and principled uncertainty estimation.
 
-### Key Findings
-
-- 🔥 **Lightweight CNNs trained from scratch outperform contrastively pretrained models** - achieving 98.13% accuracy and 0.9255 AUROC for OOD detection
-- 📊 **Contrastive pretraining can degrade CNN performance** by 4.39-10.43% accuracy due to domain mismatch
-- 🚀 **Vision Transformers require pretraining** - failing catastrophically from scratch (50.31% accuracy) but achieving competitive performance when pretrained (90.98% accuracy)
-- 🎓 **Mutual Information outperforms other uncertainty metrics** for OOD detection (0.9255 vs 0.0994 AUROC for MSP)
 
 ## 📂 Repository Structure
 
@@ -178,9 +173,8 @@ For questions or collaboration opportunities, please open an issue or contact th
 
 ## 🔗 Links
 
-- [Paper PDF](paper/MCD_OOD.pdf)
-- [WACV 2026 Workshop](https://wacv2026.thecvf.com/)
-- [GeoCV Workshop](https://www.grss-ieee.org/)
+- [WACV 2026 Workshop](https://wacv.thecvf.com/)
+- [GeoCV Workshop](https://sites.google.com/view/geocv/home?authuser=0)
 
 ---
 
